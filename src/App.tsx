@@ -30,16 +30,13 @@ type Line = {
 	id: number
 	command: string
 	output?: string[]
-	visibleOutput?: string
 }
 
 function App() {
 	const [lines, setLines] = useState<Line[]>([])
 	const [input, setInput] = useState("")
 	const [cursorIndex, setCursorIndex] = useState(0)
-	const [activeAnimation, setActiveAnimation] = useState<{ id: number; fullText: string } | null>(
-		null,
-	)
+
 	const inputRef = useRef<HTMLInputElement | null>(null)
 
 	useEffect(() => {
@@ -59,7 +56,6 @@ function App() {
 				setLines([])
 				setInput("")
 				setCursorIndex(0)
-				setActiveAnimation(null)
 				return
 			}
 
@@ -68,12 +64,21 @@ function App() {
 			switch (command) {
 				case "help":
 					output = [
-						"Commandes disponibles :",
-						"  help     - afficher la liste des commandes",
-						"  about    - qui je suis",
-						"  projects - quelques projets sélectionnés",
-						"  contact  - me contacter",
-						"  clear    - nettoyer le terminal",
+						`
+╭─── Portfolio v1.0.0 ──────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                       │                                                                                   │
+│       Welcome back !                  │ Commandes disponibles                                                             │
+│                                       │ ─────────────────────────────────────────────────────────────────                 │
+│              	   / _)                 │ help : afficher la liste des commandes                                            │
+│         _.----._/ /                   │ about : à propos de moi                                                           │
+│        /         /                    │ projects : quelques projets sélectionnés                                          │
+│     __/ (  | (  |                     │ contact : me contacter                                                            │
+│    /__.-'|_|--|_|                     │ clear : nettoyer le terminal                                                      │
+│                                       │                                                                                   │
+│      Dino 4.6 · Jurassic Pro          │                                                                                   │
+│   ~/Documents/GitHub/portfolio        │                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+						`,
 					]
 					break
 				case "about":
@@ -88,6 +93,7 @@ function App() {
 						"[01] Experimental Playground   — WebGL, motion, audio-reactif",
 						"[02] Narrative Scroll          — storytelling scroll-based",
 						"[03] Generative Identity       — identité générative, canvas",
+						"[04] WebGL Experiments         — WebGL, motion, audio-reactif",
 					]
 					break
 				case "contact":
@@ -104,18 +110,11 @@ function App() {
 				id,
 				command: trimmed,
 				output,
-				visibleOutput: output && output.length > 0 ? "" : undefined,
 			}
 
 			setLines((prev) => [...prev, newLine])
 			setInput("")
 			setCursorIndex(0)
-
-			if (output && output.length > 0) {
-				setActiveAnimation({ id, fullText: output.join("\n") })
-			} else {
-				setActiveAnimation(null)
-			}
 		},
 		[input],
 	)
@@ -134,52 +133,16 @@ function App() {
 		setCursorIndex(pos)
 	}, [input])
 
-	useEffect(() => {
-		if (!activeAnimation) return
-
-		const { id, fullText } = activeAnimation
-		if (!fullText.length) {
-			setActiveAnimation(null)
-			return
-		}
-
-		let index = 0
-		const interval = setInterval(() => {
-			index += 1
-
-			setLines((prev) => {
-				const targetIndex = prev.findIndex((line) => line.id === id)
-				if (targetIndex === -1) {
-					return prev
-				}
-
-				const next = [...prev]
-				const target = next[targetIndex]
-				const nextVisible = fullText.slice(0, Math.min(index, fullText.length))
-
-				next[targetIndex] = { ...target, visibleOutput: nextVisible }
-				return next
-			})
-
-			if (index >= fullText.length) {
-				clearInterval(interval)
-				setActiveAnimation(null)
-			}
-		}, 15)
-
-		return () => clearInterval(interval)
-	}, [activeAnimation])
-
 	const caretPosition = Math.min(cursorIndex, input.length)
 	const chars = input.split("")
 
 	return (
-		<div className="min-h-screen bg-black text-gray-200 font-mono text-sm">
+		<div className="min-h-screen bg-[#141414] text-gray-200 font-mono text-sm">
 			<div className="p-4 space-y-1">
 				<pre className="mb-3 text-orange-400 whitespace-pre leading-tight">{ASCII_ART}</pre>
 				<pre className="mb-3 text-blue-400 whitespace-pre leading-tight">{ASCII_ART_2}</pre>
 
-				<div className="mb-3 text-xs text-gray-400 whitespace-pre">
+				{/* <div className="mb-3 text-xs text-gray-400 whitespace-pre">
 					<span className="text-gray-500"># commandes disponibles</span>
 					{"\n"}
 					<span className="text-pink-400"> help </span>
@@ -196,18 +159,14 @@ function App() {
 					{"\n"}
 					<span className="text-pink-400"> clear </span>
 					<span>- nettoyer le terminal</span>
-				</div>
+				</div> */}
 
 				{lines.map((line) => (
 					<div key={line.id} className="whitespace-pre-wrap">
 						<div>
 							<span className="text-green-400">{PROMPT}</span> <span>{line.command}</span>
 						</div>
-						{line.output && (
-							<pre className="mt-1 pl-4 text-gray-500 whitespace-pre-wrap">
-								{line.visibleOutput ?? line.output.join("\n")}
-							</pre>
-						)}
+						{line.output && <pre className="mt-1 pl-4 text-red-400 whitespace-pre-wrap">{line.output.join("\n")}</pre>}
 					</div>
 				))}
 
@@ -231,16 +190,11 @@ function App() {
 							{chars.map((ch, index) => {
 								if (index === caretPosition) {
 									return (
-										<span
-											// eslint-disable-next-line react/no-array-index-key
-											key={index}
-											className="inline-block bg-gray-300 text-black animate-pulse"
-										>
+										<span key={index} className="inline-block bg-gray-300 text-black animate-pulse">
 											{ch || " "}
 										</span>
 									)
 								}
-								// eslint-disable-next-line react/no-array-index-key
 								return <span key={index}>{ch}</span>
 							})}
 							{caretPosition === chars.length && <span className="inline-block w-[0.6ch] h-4 bg-gray-300 animate-pulse align-middle" />}
