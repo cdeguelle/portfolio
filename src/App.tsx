@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { ChangeEvent, FormEvent } from "react"
+import LoadingProcess from "./components/LoadingProcess"
+import Portfolio from "./components/Portfolio"
 
 const PROMPT = "clem@portfolio:~$"
 
@@ -32,16 +34,26 @@ type Line = {
 	output?: string[]
 }
 
+type AppMode = "terminal" | "loading" | "portfolio"
+
 function App() {
+	const [appMode, setAppMode] = useState<AppMode>("terminal")
 	const [lines, setLines] = useState<Line[]>([])
 	const [input, setInput] = useState("")
 	const [cursorIndex, setCursorIndex] = useState(0)
+	const [history, setHistory] = useState<string[]>([])
+	const [historyIndex, setHistoryIndex] = useState(-1)
 
 	const inputRef = useRef<HTMLInputElement | null>(null)
+	const terminalRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
 		inputRef.current?.focus()
 	}, [])
+
+	useEffect(() => {
+		terminalRef.current?.scrollTo({ top: terminalRef.current.scrollHeight, behavior: "smooth" })
+	}, [lines])
 
 	const handleSubmit = useCallback(
 		(event: FormEvent) => {
@@ -54,8 +66,20 @@ function App() {
 			// Commande clear : on nettoie l'historique sans ajouter de nouvelle ligne
 			if (command === "clear") {
 				setLines([])
+				setHistory((prev) => [...prev, trimmed])
+				setHistoryIndex(-1)
 				setInput("")
 				setCursorIndex(0)
+				return
+			}
+
+			// Commande run great-exp : lance le process de chargement
+			if (command === "run great-exp") {
+				setHistory((prev) => [...prev, trimmed])
+				setHistoryIndex(-1)
+				setInput("")
+				setCursorIndex(0)
+				setAppMode("loading")
 				return
 			}
 
@@ -67,14 +91,14 @@ function App() {
 						`
 ╭─── Portfolio v1.0.0 ──────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                       │                                                                                   │
-│       Welcome back !                  │ Commandes disponibles                                                             │
+│       Welcome back !                  │ Available commands                                                                │
 │                                       │ ─────────────────────────────────────────────────────────────────                 │
-│              	   / _)                 │ help : afficher la liste des commandes                                            │
-│         _.----._/ /                   │ about : à propos de moi                                                           │
-│        /         /                    │ projects : quelques projets sélectionnés                                          │
-│     __/ (  | (  |                     │ contact : me contacter                                                            │
-│    /__.-'|_|--|_|                     │ clear : nettoyer le terminal                                                      │
-│                                       │                                                                                   │
+│              	   / _)                 │ help : show the list of commands                                                  │
+│         _.----._/ /                   │ about : about me                                                                  │
+│        /         /                    │ projects : some selected projects                                                 │
+│     __/ (  | (  |                     │ contact : contact me                                                              │
+│    /__.-'|_|--|_|                     │ clear : clear the terminal                                                        │
+│                                       │ run great-exp : run the great-exp project                                         │
 │      Dino 4.6 · Jurassic Pro          │                                                                                   │
 │   ~/Documents/GitHub/portfolio        │                                                                                   │
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
@@ -83,24 +107,24 @@ function App() {
 					break
 				case "about":
 					output = [
-						"Je suis Clément, creative developer.",
-						"J'aime construire des expériences web sensibles, jouables et mémorables,",
-						"à la croisée du code, du design et de l'interaction.",
+						"Hey I'm Clément, creative & fullstack developer.",
+						"I love building weird web experiences, playable & memorable,",
+						"at the crossroads of code, design & interaction.",
 					]
 					break
 				case "projects":
 					output = [
-						"[01] Experimental Playground   — WebGL, motion, audio-reactif",
-						"[02] Narrative Scroll          — storytelling scroll-based",
-						"[03] Generative Identity       — identité générative, canvas",
-						"[04] WebGL Experiments         — WebGL, motion, audio-reactif",
+						"[01] Mobile app                                     — React Native, TypeScript, Expo",
+						"[02] 3D isometric & interactive map                 — Three.js, WebGL, React",
+						"[03] Website for restaurant 'le petit crocus'       — Typescript, Next.js",
+						"[04] Discord bot                                    — Javascript, Discord.js",
 					]
 					break
 				case "contact":
-					output = ["Email   : hello@clement-deguelle.dev", "GitHub  : github.com/clem-deg", "LinkedIn: linkedin.com/in/clement-deguelle"]
+					output = ["Email   : clement.deguelle@gmail.com", "GitHub  : github.com/cdeguelle", "LinkedIn: linkedin.com/in/clement-deguelle"]
 					break
 				default:
-					output = [`Commande inconnue : ${trimmed}`, "Utilise 'help' pour voir les commandes disponibles."]
+					output = [`Unknown command: ${trimmed}`, "Use 'help' to see the available commands."]
 					break
 			}
 
@@ -113,6 +137,8 @@ function App() {
 			}
 
 			setLines((prev) => [...prev, newLine])
+			setHistory((prev) => [...prev, trimmed])
+			setHistoryIndex(-1)
 			setInput("")
 			setCursorIndex(0)
 		},
@@ -126,6 +152,35 @@ function App() {
 		setCursorIndex(pos)
 	}, [])
 
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent<HTMLInputElement>) => {
+			if (event.key === "ArrowUp") {
+				event.preventDefault()
+				if (history.length === 0) return
+				const newIndex = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1)
+				setHistoryIndex(newIndex)
+				const cmd = history[newIndex]
+				setInput(cmd)
+				setCursorIndex(cmd.length)
+			} else if (event.key === "ArrowDown") {
+				event.preventDefault()
+				if (historyIndex === -1) return
+				const newIndex = historyIndex + 1
+				if (newIndex >= history.length) {
+					setHistoryIndex(-1)
+					setInput("")
+					setCursorIndex(0)
+				} else {
+					setHistoryIndex(newIndex)
+					const cmd = history[newIndex]
+					setInput(cmd)
+					setCursorIndex(cmd.length)
+				}
+			}
+		},
+		[history, historyIndex],
+	)
+
 	const syncCursorFromInput = useCallback(() => {
 		const el = inputRef.current
 		if (!el) return
@@ -136,30 +191,19 @@ function App() {
 	const caretPosition = Math.min(cursorIndex, input.length)
 	const chars = input.split("")
 
+	if (appMode === "loading") {
+		return <LoadingProcess onComplete={() => setAppMode("portfolio")} />
+	}
+
+	if (appMode === "portfolio") {
+		return <Portfolio onBack={() => setAppMode("terminal")} />
+	}
+
 	return (
-		<div className="min-h-screen bg-[#141414] text-gray-200 font-mono text-sm">
+		<div ref={terminalRef} className="h-screen overflow-y-auto bg-[#141414] text-gray-200 font-mono text-sm">
 			<div className="p-4 space-y-1">
 				<pre className="mb-3 text-orange-400 whitespace-pre leading-tight">{ASCII_ART}</pre>
 				<pre className="mb-3 text-blue-400 whitespace-pre leading-tight">{ASCII_ART_2}</pre>
-
-				{/* <div className="mb-3 text-xs text-gray-400 whitespace-pre">
-					<span className="text-gray-500"># commandes disponibles</span>
-					{"\n"}
-					<span className="text-pink-400"> help </span>
-					<span>- afficher la liste des commandes</span>
-					{"\n"}
-					<span className="text-pink-400"> about </span>
-					<span>- à propos de moi</span>
-					{"\n"}
-					<span className="text-pink-400"> projects </span>
-					<span>- quelques projets</span>
-					{"\n"}
-					<span className="text-pink-400"> contact </span>
-					<span>- me contacter</span>
-					{"\n"}
-					<span className="text-pink-400"> clear </span>
-					<span>- nettoyer le terminal</span>
-				</div> */}
 
 				{lines.map((line) => (
 					<div key={line.id} className="whitespace-pre-wrap">
@@ -182,6 +226,7 @@ function App() {
 						autoComplete="off"
 						spellCheck={false}
 						onSelect={syncCursorFromInput}
+						onKeyDown={handleKeyDown}
 						onKeyUp={syncCursorFromInput}
 					/>
 					<div className="flex items-center">
