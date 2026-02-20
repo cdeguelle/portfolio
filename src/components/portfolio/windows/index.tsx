@@ -6,6 +6,7 @@ import { ComputerContent } from "./ComputerContent"
 import { TerminalContent } from "./TerminalContent"
 import { CvContent } from "./CvContent"
 import { ShutdownContent } from "./ShutdownContent"
+import { MusicContent } from "./MusicContent"
 
 export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Position) => void) {
 	switch (id) {
@@ -23,5 +24,7 @@ export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Positio
 			return <TerminalContent />
 		case "rusure":
 			return <ShutdownContent onClose={onClose!} onMove={onMove!} />
+		case "music":
+			return <MusicContent />
 	}
 }
