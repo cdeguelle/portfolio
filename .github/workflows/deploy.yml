@@ -17,14 +17,16 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p ${{ secrets.FTP_PORT }} ${{ secrets.FTP_SERVER }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
       - name: Deploy dist via SFTP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          port: ${{ secrets.FTP_PORT }}
-          username: ${{ secrets.FTP_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "dist/*"
-          target: "/domains/clemdegdev.fr/public_html/"
-          strip_components: 1
-          rm: true
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.FTP_PORT }} -o StrictHostKeyChecking=no" \
+            dist/ \
+            ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}:/domains/clemdegdev.fr/public_html/
