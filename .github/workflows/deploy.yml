@@ -17,9 +17,6 @@ jobs:
             - run: npm ci
             - run: npm run build
 
-            - name: Check built index.html
-              run: cat dist/index.html
-
             - name: Deploy dist via SFTP
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
@@ -27,4 +24,5 @@ jobs:
                   username: ${{ secrets.FTP_USERNAME }}
                   password: ${{ secrets.FTP_PASSWORD }}
                   local-dir: dist/
-                  server-dir: public_html/
+                  server-dir: domains/clemdegdev.fr/public_html/
+                  dangerous-clean-slate: true
