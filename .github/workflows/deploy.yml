@@ -17,6 +17,9 @@ jobs:
             - run: npm ci
             - run: npm run build
 
+            - name: Check built index.html
+              run: cat dist/index.html
+
             - name: Deploy dist via SFTP
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
