@@ -22,11 +22,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ secrets.FTP_PORT }} ${{ secrets.FTP_SERVER }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
 
       - name: Deploy dist via SFTP
         run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.FTP_PORT }} -o StrictHostKeyChecking=no" \
-            dist/ \
-            ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}:/domains/clemdegdev.fr/public_html/
+          lftp -c "
+            set sftp:connect-program 'ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p ${{ secrets.FTP_PORT }}';
+            open sftp://${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }};
+            mirror --reverse --delete --verbose dist/ /domains/clemdegdev.fr/public_html/;
+          "
