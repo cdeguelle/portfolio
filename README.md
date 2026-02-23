@@ -1,75 +1,39 @@
-# React + TypeScript + Vite
+# (づ￣ ³￣)づ — clemdegdev.fr
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+My personal portfolio, built as a **Windows 95-style desktop** experience.
 
-Currently, two official plugins are available:
+Live at **[clemdegdev.fr](https://clemdegdev.fr)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Concept
 
-## React Compiler
+The site opens with a retro terminal boot sequence, then drops you into a fully interactive Windows 95 desktop — complete with draggable windows, a start menu, a taskbar, and a right-click context menu. Each "app" reveals a section of the portfolio.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+| Window | Content |
+|--------|---------|
+| About | Bio & tech stack |
+| Projects | Featured work |
+| CV | Résumé (PDF) |
+| Contact | Links & email |
+| Terminal | Easter egg |
+| Music | Currently listening |
 
-Note: This will impact Vite dev & build performances.
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **React 19** + **TypeScript** — UI & logic
+- **Vite** — build tooling
+- **Tailwind CSS** — utility styling
+- **Three.js / WebGL** — used in project demos
+- **GitHub Actions** + **FTP Deploy** — CI/CD to Hostinger
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Local Development
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deployment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Pushes to `main` automatically build and deploy to [clemdegdev.fr](https://clemdegdev.fr) via the GitHub Actions workflow in [.github/workflows/deploy.yml](.github/workflows/deploy.yml).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Required repository secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`.
