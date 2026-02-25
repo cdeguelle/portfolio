@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { BG, FONT, raised, sunken } from "./theme"
 import type { WinMeta, Position } from "./types"
+import { paintBus } from "./windows/paintBus"
 
 // ─── Control Button ───────────────────────────────────────────────────────
 function CtrlBtn({ label, onClick, disabled }: { label: string; onClick?: () => void; disabled?: boolean }) {
@@ -31,17 +32,10 @@ function CtrlBtn({ label, onClick, disabled }: { label: string; onClick?: () => 
 }
 
 // ─── Menu Bar ─────────────────────────────────────────────────────────────
-type MenuItem = { label: string; action?: () => void; disabled?: boolean } | "separator"
+type MenuItem = { label: string; action?: () => void; disabled?: boolean; shortcut?: string } | "separator"
 
 const MENUS: Record<string, MenuItem[]> = {
-	File: [
-		{ label: "New", disabled: true },
-		{ label: "Open...", disabled: true },
-		"separator",
-		{ label: "Close" },
-		"separator",
-		{ label: "Exit" },
-	],
+	File: [{ label: "New", disabled: true }, { label: "Open...", disabled: true }, "separator", { label: "Close" }, "separator", { label: "Exit" }],
 	Edit: [
 		{ label: "Undo", disabled: true },
 		"separator",
@@ -87,14 +81,22 @@ function DropdownItem({ item, onClose }: { item: MenuItem; onClose: () => void }
 				color: item.disabled ? "#808080" : hovered ? "#ffffff" : "#000000",
 				background: hovered && !item.disabled ? "#000080" : "transparent",
 				userSelect: "none",
+				display: "flex",
+				justifyContent: "space-between",
+				gap: 24,
 			}}
 		>
-			{item.label}
+			<span>{item.label}</span>
+			{item.shortcut && (
+				<span style={{ color: item.disabled ? "#808080" : hovered ? "#c0c0ff" : "#808080", fontSize: 10 }}>
+					{item.shortcut}
+				</span>
+			)}
 		</div>
 	)
 }
 
-function MenuBar({ onClose }: { onClose: () => void }) {
+function MenuBar({ onClose, winId }: { onClose: () => void; winId: string }) {
 	const [openMenu, setOpenMenu] = useState<string | null>(null)
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -108,14 +110,36 @@ function MenuBar({ onClose }: { onClose: () => void }) {
 	}, [openMenu])
 
 	const resolvedMenus = Object.fromEntries(
-		Object.entries(MENUS).map(([name, items]) => [
-			name,
-			items.map((item) => {
+		Object.entries(MENUS).map(([name, items]) => {
+			const mapped: MenuItem[] = items.map((item) => {
 				if (item === "separator") return item
 				if (item.label === "Close" || item.label === "Exit") return { ...item, action: onClose }
+				if (winId === "paint" && name === "Edit" && item.label === "Undo")
+					return { ...item, disabled: false, shortcut: "Ctrl+Z", action: () => paintBus.undo?.() }
 				return item
-			}),
-		]),
+			})
+
+			if (winId === "paint") {
+				if (name === "File") {
+					return [name, [
+						{ label: "Save Image", shortcut: "Ctrl+S", action: () => paintBus.save?.() },
+						"separator" as const,
+						...mapped,
+					]]
+				}
+				if (name === "Edit") {
+					const undoIdx = mapped.findIndex((i) => i !== "separator" && (i as { label: string }).label === "Undo")
+					const result = [...mapped]
+					if (undoIdx >= 0) {
+						result.splice(undoIdx + 1, 0, { label: "Redo", shortcut: "Ctrl+Shift+Z", action: () => paintBus.redo?.() })
+					}
+					result.push("separator", { label: "Clear Image", action: () => paintBus.clear?.() })
+					return [name, result]
+				}
+			}
+
+			return [name, mapped]
+		}),
 	)
 
 	return (
@@ -243,9 +267,7 @@ export function Window95({
 			<div
 				onMouseDown={onTitleMouseDown}
 				style={{
-					background: isActive
-						? "linear-gradient(to right, #000080, #1084d0)"
-						: "linear-gradient(to right, #7b7b7b, #a8a8a8)",
+					background: isActive ? "linear-gradient(to right, #000080, #1084d0)" : "linear-gradient(to right, #7b7b7b, #a8a8a8)",
 					display: "flex",
 					alignItems: "center",
 					padding: "2px 4px",
@@ -281,13 +303,13 @@ export function Window95({
 				<div style={{ padding: 16, background: BG, fontFamily: FONT }}>{children}</div>
 			) : (
 				<>
-					<MenuBar onClose={onClose} />
+					<MenuBar onClose={onClose} winId={meta.id} />
 
 					<div
 						style={{
 							margin: 4,
 							...sunken,
-							background: meta.id === "terminal" ? "#000000" : "#ffffff",
+							background: meta.id === "terminal" ? "#000000" : meta.id === "paint" ? BG : "#ffffff",
 							padding: meta.id === "cv" || meta.id === "terminal" ? 0 : 8,
 							maxHeight: meta.contentHeight ?? 380,
 							overflowY: "auto",
@@ -300,9 +322,7 @@ export function Window95({
 
 					<div style={{ padding: "2px 8px", fontSize: 10, fontFamily: FONT, display: "flex", gap: 8 }}>
 						<div style={{ ...sunken, padding: "0 8px", flex: 1, fontSize: 10 }}>Ready</div>
-						{meta.statusText && (
-							<div style={{ ...sunken, padding: "0 8px", width: 80, fontSize: 10 }}>{meta.statusText}</div>
-						)}
+						{meta.statusText && <div style={{ ...sunken, padding: "0 8px", width: 80, fontSize: 10 }}>{meta.statusText}</div>}
 					</div>
 				</>
 			)}

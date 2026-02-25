@@ -1,3 +1,4 @@
+import paintIcon from "../../assets/paint.png"
 import computerIcon from "../../assets/computer.png"
 import folderIcon from "../../assets/directory.png"
 import mailIcon from "../../assets/mail.png"
@@ -8,7 +9,7 @@ import signatureIcon from "../../assets/signature.png"
 import musicIcon from "../../assets/music.png"
 
 export type Position = { x: number; y: number }
-export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music"
+export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint"
 
 export interface WinMeta {
 	id: WinId
@@ -29,6 +30,7 @@ export const WIN_META: WinMeta[] = [
 	{ id: "terminal", title: "MS-DOS Prompt", icon: consoleIcon, width: 560 },
 	{ id: "rusure", title: "Shut Down Windows", icon: windowsIcon, width: 360, isDialog: true },
 	{ id: "music", title: "Spotify — Now Playing", icon: musicIcon, width: 380, contentHeight: 410 },
+	{ id: "paint", title: "Paint", icon: paintIcon, width: 720, contentHeight: 520 },
 ]
 
 export const DESKTOP_ICONS: { id: WinId; label: string; icon: string }[] = [
@@ -38,6 +40,7 @@ export const DESKTOP_ICONS: { id: WinId; label: string; icon: string }[] = [
 	{ id: "contact", label: "Contact", icon: mailIcon },
 	{ id: "cv", label: "CV 2026", icon: signatureIcon },
 	{ id: "music", label: "Music", icon: musicIcon },
+	{ id: "paint", label: "Paint", icon: paintIcon },
 ]
 
 export const INITIAL_POS: Record<WinId, Position> = {
@@ -49,4 +52,5 @@ export const INITIAL_POS: Record<WinId, Position> = {
 	terminal: { x: 120, y: 45 },
 	rusure: { x: 340, y: 220 },
 	music: { x: 180, y: 80 },
+	paint: { x: 220, y: 60 },
 }
