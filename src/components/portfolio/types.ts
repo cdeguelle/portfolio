@@ -29,7 +29,7 @@ export const WIN_META: WinMeta[] = [
 	{ id: "cv", title: "CV_2026", icon: signatureIcon, width: 680, contentHeight: 500, statusText: "1 object" },
 	{ id: "terminal", title: "MS-DOS Prompt", icon: consoleIcon, width: 560 },
 	{ id: "rusure", title: "Shut Down Windows", icon: windowsIcon, width: 360, isDialog: true },
-	{ id: "music", title: "Music — Now Playing", icon: musicIcon, width: 380, contentHeight: 410 },
+	{ id: "music", title: "Music", icon: musicIcon, width: 380, contentHeight: 410 },
 	{ id: "paint", title: "Paint", icon: paintIcon, width: 720, contentHeight: 520 },
 ]
 
