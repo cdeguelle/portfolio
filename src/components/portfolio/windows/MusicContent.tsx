@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useCallback } from "react"
 import { BG, FONT, raised, sunken } from "../theme"
 import musicIcon from "../../../assets/music.png"
 import t1 from "../../../assets/Project Ex - Tranquility (freetouse.com).mp3"
@@ -24,16 +24,117 @@ function fmt(s: number) {
 	return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
 }
 
+const BAR_COUNT = 40
+
 export function MusicContent() {
 	const audioRef = useRef<HTMLAudioElement>(null)
 	const playingRef = useRef(false)
 	const pendingPlayRef = useRef(false)
+
+	// Web Audio
+	const canvasRef = useRef<HTMLCanvasElement>(null)
+	const audioCtxRef = useRef<AudioContext | null>(null)
+	const analyserRef = useRef<AnalyserNode | null>(null)
+	const peaksRef = useRef<number[]>(new Array(BAR_COUNT).fill(0))
+	const vizFrameRef = useRef<number>(0)
 
 	const [trackIdx, setTrackIdx] = useState(0)
 	const [playing, setPlaying] = useState(false)
 	const [currentTime, setCurrentTime] = useState(0)
 	const [duration, setDuration] = useState(0)
 	const [volume, setVolume] = useState(0.7)
+
+	const initAudio = useCallback(() => {
+		const audio = audioRef.current
+		if (!audio) return
+		if (audioCtxRef.current) {
+			if (audioCtxRef.current.state === "suspended") audioCtxRef.current.resume()
+			return
+		}
+		const ctx = new AudioContext()
+		const analyser = ctx.createAnalyser()
+		analyser.fftSize = 256
+		analyser.smoothingTimeConstant = 0.8
+		const source = ctx.createMediaElementSource(audio)
+		source.connect(analyser)
+		analyser.connect(ctx.destination)
+		audioCtxRef.current = ctx
+		analyserRef.current = analyser
+	}, [])
+
+	// Visualizer draw loop
+	useEffect(() => {
+		const canvas = canvasRef.current
+		if (!canvas) return
+
+		function draw() {
+			const W = canvas!.offsetWidth
+			const H = canvas!.offsetHeight
+			if (canvas!.width !== W || canvas!.height !== H) {
+				canvas!.width = W
+				canvas!.height = H
+			}
+			const ctx = canvas!.getContext("2d")
+			if (!ctx) { vizFrameRef.current = requestAnimationFrame(draw); return }
+
+			ctx.fillStyle = "#000000"
+			ctx.fillRect(0, 0, W, H)
+
+			const analyser = analyserRef.current
+			if (analyser) {
+				const dataArray = new Uint8Array(analyser.frequencyBinCount)
+				analyser.getByteFrequencyData(dataArray)
+				const peaks = peaksRef.current
+				const gap = 2
+				const barW = Math.floor((W - gap * (BAR_COUNT + 1)) / BAR_COUNT)
+
+				for (let i = 0; i < BAR_COUNT; i++) {
+					const binIndex = Math.floor(Math.pow(i / BAR_COUNT, 1.2) * analyser.frequencyBinCount * 0.75)
+					const value = dataArray[binIndex] / 255
+					const barH = Math.floor(value * H)
+					const x = gap + i * (barW + gap)
+
+					// Update peak hold
+					if (barH > peaks[i]) peaks[i] = barH
+					else peaks[i] = Math.max(0, peaks[i] - 1.2)
+
+					// Bar gradient: dark green → bright green → yellow-green at peak
+					const grad = ctx.createLinearGradient(0, H, 0, H - barH)
+					grad.addColorStop(0, "#003d00")
+					grad.addColorStop(0.6, "#00cc33")
+					grad.addColorStop(1, value > 0.8 ? "#ffee00" : "#00ff55")
+					ctx.fillStyle = grad
+					ctx.fillRect(x, H - barH, barW, barH)
+
+					// Peak indicator
+					if (peaks[i] > 2) {
+						ctx.fillStyle = value > 0.8 ? "#ffee00" : "#88ffaa"
+						ctx.fillRect(x, H - peaks[i], barW, 2)
+					}
+				}
+
+				// Scanline overlay for LCD feel
+				ctx.fillStyle = "rgba(0,0,0,0.12)"
+				for (let y = 0; y < H; y += 2) ctx.fillRect(0, y, W, 1)
+			} else {
+				// Idle: flat low bars
+				const gap = 2
+				const barW = Math.floor((W - gap * (BAR_COUNT + 1)) / BAR_COUNT)
+				ctx.fillStyle = "#002200"
+				for (let i = 0; i < BAR_COUNT; i++) {
+					ctx.fillRect(gap + i * (barW + gap), H - 3, barW, 3)
+				}
+			}
+
+			vizFrameRef.current = requestAnimationFrame(draw)
+		}
+
+		draw()
+		return () => {
+			cancelAnimationFrame(vizFrameRef.current)
+			audioCtxRef.current?.close()
+		}
+	}, [])
 
 	const track = TRACKS[trackIdx]
 
@@ -58,11 +159,13 @@ export function MusicContent() {
 		if (audioRef.current) audioRef.current.volume = volume
 	}, [volume])
 
-	const play = () =>
+	const play = () => {
+		initAudio()
 		audioRef.current
 			?.play()
 			.then(() => setPlaying(true))
 			.catch(() => {})
+	}
 
 	const pause = () => {
 		audioRef.current?.pause()
@@ -151,6 +254,11 @@ export function MusicContent() {
 			{/* Progress bar */}
 			<div style={{ ...sunken, height: 12, background: "#fff", cursor: "pointer", position: "relative", overflow: "hidden", flexShrink: 0 }} onClick={seek}>
 				<div style={{ background: "#000080", height: "100%", width: `${progress}%`, pointerEvents: "none" }} />
+			</div>
+
+			{/* Visualizer */}
+			<div style={{ ...sunken, background: "#000", height: 80, overflow: "hidden", flexShrink: 0 }}>
+				<canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
 			</div>
 
 			{/* Transport controls */}
