@@ -8,11 +8,15 @@ import { CvContent } from "./CvContent"
 import { ShutdownContent } from "./ShutdownContent"
 import { MusicContent } from "./MusicContent"
 import { PaintContent } from "./PaintContent"
+import { MapContent } from "./MapContent"
+import { PhoneContent } from "./PhoneContent"
+import { CrocusContent } from "./CrocusContent"
+import { DiscordContent } from "./DiscordContent"
 
-export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Position) => void) {
+export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Position) => void, onOpenWindow?: (id: WinId) => void) {
 	switch (id) {
 		case "projects":
-			return <ProjectsContent />
+			return <ProjectsContent onOpenWindow={onOpenWindow} />
 		case "about":
 			return <AboutContent />
 		case "contact":
@@ -29,5 +33,13 @@ export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Positio
 			return <MusicContent />
 		case "paint":
 			return <PaintContent />
+		case "map":
+			return <MapContent />
+		case "phone":
+			return <PhoneContent />
+		case "crocus":
+			return <CrocusContent />
+		case "discord":
+			return <DiscordContent />
 	}
 }

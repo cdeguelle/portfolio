@@ -309,9 +309,9 @@ export function Window95({
 						style={{
 							margin: 4,
 							...sunken,
-							background: meta.id === "terminal" ? "#000000" : meta.id === "paint" ? BG : "#ffffff",
-							padding: meta.id === "cv" || meta.id === "terminal" ? 0 : 8,
-							maxHeight: meta.contentHeight ?? 380,
+							background: meta.id === "terminal" || meta.id === "map" || meta.id === "phone" ? "#000000" : meta.id === "paint" ? BG : "#ffffff",
+							padding: meta.id === "cv" || meta.id === "terminal" || meta.id === "map" || meta.id === "phone" || meta.id === "crocus" || meta.id === "discord" ? 0 : 8,
+							height: meta.contentHeight ?? undefined, maxHeight: meta.contentHeight ?? 380,
 							overflowY: "auto",
 							fontSize: 11,
 							fontFamily: FONT,

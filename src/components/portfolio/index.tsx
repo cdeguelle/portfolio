@@ -128,7 +128,7 @@ export default function Portfolio() {
 						zIndex={zOrder.indexOf(id) + 10}
 						isActive={activeWindow === id}
 					>
-						{getContent(id, () => closeWindow(id), (pos) => setPosition(id, pos))}
+						{getContent(id, () => closeWindow(id), (pos) => setPosition(id, pos), openWindow)}
 					</Window95>
 				)
 			})}

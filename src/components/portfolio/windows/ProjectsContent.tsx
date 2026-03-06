@@ -1,33 +1,38 @@
 import { useState } from "react"
 import folderIcon from "../../../assets/directory.png"
 import { BG, FONT, raised, sunken } from "../theme"
+import type { WinId } from "../types"
 
-const projects = [
+const projects: { title: string; description: string; tags: string[]; winId?: WinId }[] = [
 	{
 		title: "Mobile app",
 		description: "Mobile application for schedule management & creation of new events",
 		tags: ["React Native", "TypeScript", "Expo"],
+		winId: "phone",
 	},
 	{
 		title: "3D isometric & interactive map",
 		description: "Interactive 3D map with animations & 3D effects",
 		tags: ["Three.js", "WebGL", "React"],
+		winId: "map",
 	},
 	{
 		title: "Website for restaurant 'le petit crocus'",
 		description: "Website for restaurant 'le petit crocus'",
 		tags: ["Typescript", "Next.js"],
+		winId: "crocus",
 	},
 	{
 		title: "Discord bot",
 		description: "Discord bot for community management",
 		tags: ["Javascript", "Discord.js"],
+		winId: "discord",
 	},
 ]
 
 type View = "Details" | "Icons" | "List"
 
-export function ProjectsContent() {
+export function ProjectsContent({ onOpenWindow }: { onOpenWindow?: (id: WinId) => void }) {
 	const [view, setView] = useState<View>("Details")
 	const [selected, setSelected] = useState<number | null>(null)
 
@@ -67,6 +72,7 @@ export function ProjectsContent() {
 						<div
 							key={i}
 							onClick={() => setSelected(i)}
+							onDoubleClick={() => p.winId && onOpenWindow?.(p.winId)}
 							style={{
 								display: "grid",
 								gridTemplateColumns: "1fr 160px 130px",
@@ -110,6 +116,7 @@ export function ProjectsContent() {
 						<div
 							key={i}
 							onClick={() => setSelected(i)}
+							onDoubleClick={() => p.winId && onOpenWindow?.(p.winId)}
 							style={{
 								display: "flex",
 								flexDirection: "column",
@@ -152,6 +159,7 @@ export function ProjectsContent() {
 						<div
 							key={i}
 							onClick={() => setSelected(i)}
+							onDoubleClick={() => p.winId && onOpenWindow?.(p.winId)}
 							style={{
 								display: "flex",
 								alignItems: "center",
