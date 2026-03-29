@@ -16,13 +16,10 @@ export function AboutContent() {
 				👋 Clément Deguelle — Creative fullstack developer
 			</div>
 			<p style={{ marginBottom: 10 }}>
-				Fullstack developer passionate about creative interfaces and interactive experiences. I work with React,
-				TypeScript, WebGL and everything that pushes the boundaries of the web.
+				Fullstack developer passionate about creative interfaces and interactive experiences. I work with React, TypeScript, WebGL and everything that pushes the boundaries
+				of the web.
 			</p>
-			<p style={{ marginBottom: 10 }}>
-				I love building weird, effective and memorable web experiences, at the crossroads of code, design and
-				interaction.
-			</p>
+			<p style={{ marginBottom: 10 }}>I love building sensitive, effective and memorable web experiences, at the crossroads of code, design and interaction.</p>
 			<p style={{ marginBottom: 12 }}>Always curious, always experimenting.</p>
 			<div style={{ ...sunken, background: "#f8f8f8", padding: 10, fontFamily: FONT }}>
 				<div style={{ fontWeight: "bold", marginBottom: 6, fontSize: 11 }}>🛠 Tech stack:</div>
