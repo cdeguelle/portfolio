@@ -8,9 +8,10 @@ import consoleIcon from "../../assets/console.png"
 import signatureIcon from "../../assets/signature.png"
 import musicIcon from "../../assets/music.png"
 import msieIcon from "../../assets/msie1-5.png"
+import mineIcon from "../../assets/minesweeper/icon.svg"
 
 export type Position = { x: number; y: number }
-export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint" | "map" | "phone" | "crocus" | "discord"
+export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint" | "map" | "phone" | "crocus" | "discord" | "minesweeper"
 
 export interface WinMeta {
 	id: WinId
@@ -36,6 +37,7 @@ export const WIN_META: WinMeta[] = [
 	{ id: "phone", title: "Mobile App — Screenshots", icon: computerIcon, width: 700, contentHeight: 620 },
 	{ id: "crocus", title: "Le Petit Crocus — Internet Explorer", icon: msieIcon, width: 1100, contentHeight: 750 },
 	{ id: "discord", title: "Discord Bot — 3D Logo", icon: computerIcon, width: 540, contentHeight: 480 },
+	{ id: "minesweeper", title: "Minesweeper", icon: mineIcon, width: 356, contentHeight: 430 },
 ]
 
 export const DESKTOP_ICONS: { id: WinId; label: string; icon: string }[] = [
@@ -46,6 +48,7 @@ export const DESKTOP_ICONS: { id: WinId; label: string; icon: string }[] = [
 	{ id: "cv", label: "CV 2026", icon: signatureIcon },
 	{ id: "music", label: "Music", icon: musicIcon },
 	{ id: "paint", label: "Paint", icon: paintIcon },
+	{ id: "minesweeper", label: "Démineur", icon: mineIcon },
 ]
 
 export const INITIAL_POS: Record<WinId, Position> = {
@@ -62,4 +65,5 @@ export const INITIAL_POS: Record<WinId, Position> = {
 	crocus: { x: 60, y: 30 },
 	discord: { x: 180, y: 60 },
 	phone: { x: 160, y: 50 },
+	minesweeper: { x: 250, y: 80 },
 }

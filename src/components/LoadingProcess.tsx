@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 
 const STEPS = [
-	{ label: "[1/6] Initializing environment...", duration: 800 },
-	{ label: "[2/6] Loading modules...", duration: 1200 },
-	{ label: "[3/6] Compiling shaders...", duration: 1500 },
-	{ label: "[4/6] Building layout engine...", duration: 1000 },
-	{ label: "[5/6] Rendering components...", duration: 900 },
-	{ label: "[6/6] Starting server on port 3000...", duration: 700 },
+	{ label: "[1/6] Initializing environment...", duration: 300 },
+	{ label: "[2/6] Loading modules...", duration: 400 },
+	{ label: "[3/6] Compiling shaders...", duration: 500 },
+	{ label: "[4/6] Building layout engine...", duration: 350 },
+	{ label: "[5/6] Rendering components...", duration: 300 },
+	{ label: "[6/6] Starting server on port 3000...", duration: 250 },
 ]
 
 const BAR_WIDTH = 20

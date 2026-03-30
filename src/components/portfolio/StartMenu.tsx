@@ -5,6 +5,7 @@ import mailIcon from "../../assets/mail.png"
 import computerIcon from "../../assets/computer.png"
 import consoleIcon from "../../assets/console.png"
 import stopIcon from "../../assets/stop.png"
+import mineIcon from "../../assets/minesweeper/icon.svg"
 import { BG, FONT, raised } from "./theme"
 import type { WinId } from "./types"
 
@@ -41,7 +42,8 @@ export function StartMenu({ onOpenWindow, onClose }: { onOpenWindow: (id: WinId)
 		{ icon: notePadIcon, label: "About", action: () => onOpenWindow("about") },
 		{ icon: mailIcon, label: "Contact", action: () => onOpenWindow("contact") },
 		{ icon: computerIcon, label: "My Computer", action: () => onOpenWindow("computer") },
-		{ icon: consoleIcon, label: "Open Terminal", action: () => onOpenWindow("terminal"), dividerBefore: true },
+		{ icon: mineIcon, label: "Minesweeper", action: () => onOpenWindow("minesweeper"), dividerBefore: true },
+		{ icon: consoleIcon, label: "Open Terminal", action: () => onOpenWindow("terminal") },
 		{ icon: stopIcon, label: "Shut Down...", action: () => onOpenWindow("rusure") },
 	]
 

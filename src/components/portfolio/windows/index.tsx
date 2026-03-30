@@ -12,6 +12,7 @@ import { MapContent } from "./MapContent"
 import { PhoneContent } from "./PhoneContent"
 import { CrocusContent } from "./CrocusContent"
 import { DiscordContent } from "./DiscordContent"
+import { MinesweeperContent } from "./MinesweeperContent"
 
 export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Position) => void, onOpenWindow?: (id: WinId) => void) {
 	switch (id) {
@@ -41,5 +42,7 @@ export function getContent(id: WinId, onClose?: () => void, onMove?: (p: Positio
 			return <CrocusContent />
 		case "discord":
 			return <DiscordContent />
+		case "minesweeper":
+			return <MinesweeperContent />
 	}
 }
