@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 export type PortfolioStyle = "w95" | "pixelart"
 
 const STEPS = [
-	{ label: "[1/6] Initializing environment...", duration: 800 },
-	{ label: "[2/6] Loading modules...", duration: 1200 },
-	{ label: "[3/6] Compiling shaders...", duration: 1500 },
-	{ label: "[4/6] Building layout engine...", duration: 1000 },
-	{ label: "[5/6] Rendering components...", duration: 900 },
-	{ label: "[6/6] Starting server on port 3000...", duration: 700 },
+	{ label: "[1/6] Initializing environment...", duration: 200 },
+	{ label: "[2/6] Loading modules...", duration: 300 },
+	{ label: "[3/6] Compiling shaders...", duration: 400 },
+	{ label: "[4/6] Building layout engine...", duration: 500 },
+	{ label: "[5/6] Rendering components...", duration: 300 },
+	{ label: "[6/6] Starting server on port 3000...", duration: 400 },
 ]
 
 const STYLES: { id: PortfolioStyle; label: string }[] = [
@@ -97,17 +97,6 @@ export default function LoadingProcess({ onComplete }: Props) {
 	return (
 		<div className="min-h-screen bg-[#141414] text-gray-200 font-mono text-sm p-4">
 			<pre className="text-yellow-400 mb-4">
-<<<<<<< Updated upstream
-				{`  ▄████  ██▀███  ▓█████ ▄▄▄     ▄▄▄█████▓   ▓█████ ▒██   ██▒ ██▓███
- ██▒ ▀█▒▓██ ▒ ██▒▓█   ▀▒████▄   ▓  ██▒ ▓▒   ▓█   ▀ ▒▒ █ █ ▒░▓██░  ██▒
-▒██░▄▄▄░▓██ ░▄█ ▒▒███  ▒██  ▀█▄ ▒ ▓██░ ▒░   ▒███   ░░  █   ░▓██░ ██▓▒
-░▓█  ██▓▒██▀▀█▄  ▒▓█  ▄░██▄▄▄▄██░ ▓██▓ ░    ▒▓█  ▄  ░ █ █ ▒ ▒██▄█▓▒ ▒
-░▒▓███▀▒░██▓ ▒██▒░▒████▒▓█   ▓██▒ ▒██▒ ░    ░▒████▒▒██▒ ▒██▒▒██▒ ░  ░
- ░▒   ▒ ░ ▒▓ ░▒▓░░░ ▒░ ░▒▒   ▓▒█░ ▒ ░░      ░░ ▒░ ░▒▒ ░ ░▓ ░▒▓▒░ ░ ░
-  ░   ░   ░▒ ░ ▒░ ░ ░  ░ ▒   ▒▒ ░   ░        ░ ░  ░░░   ░▒ ░░▒ ░
-░ ░   ░   ░░   ░    ░    ░   ▒    ░            ░    ░    ░ ░░
-      ░    ░        ░  ░     ░  ░              ░  ░ ░    ░          `}
-=======
 				{` ▄████▄  ▓█████▄     ██▓███   ▒█████   ██▀███  ▄▄▄█████▓  █████▒▒█████   ██▓     ██▓ ▒█████
 ▒██▀ ▀█  ▒██▀ ██▌   ▓██░  ██▒▒██▒  ██▒▓██ ▒ ██▒▓  ██▒ ▓▒▓██   ▒▒██▒  ██▒▓██▒    ▓██▒▒██▒  ██▒
 ▒▓█    ▄ ░██   █▌   ▓██░ ██▓▒▒██░  ██▒▓██ ░▄█ ▒▒ ▓██░ ▒░▒████ ░▒██░  ██▒▒██░    ▒██▒▒██░  ██▒
@@ -118,7 +107,6 @@ export default function LoadingProcess({ onComplete }: Props) {
 ░         ░ ░  ░    ░░       ░ ░ ░ ▒    ░░   ░   ░       ░ ░   ░ ░ ░ ▒    ░ ░    ▒ ░░ ░ ░ ▒
 ░ ░         ░                    ░ ░     ░                         ░ ░      ░  ░ ░      ░ ░
 ░         ░                                                                                  `}
->>>>>>> Stashed changes
 			</pre>
 			<p className="text-gray-400 mb-4">Launching great-exp v1.0.0...</p>
 			<div className="space-y-1">
@@ -146,24 +134,13 @@ export default function LoadingProcess({ onComplete }: Props) {
 							<p className="text-gray-400 mb-3">Select your experience:</p>
 							<div className="space-y-1 ml-2">
 								{STYLES.map((style, i) => (
-									<div
-										key={style.id}
-										className="flex items-center gap-2 cursor-pointer"
-										onClick={() => onComplete(style.id)}
-										onMouseEnter={() => setSelected(i)}
-									>
-										<span className={selected === i ? "text-yellow-400" : "text-gray-600"}>
-											{selected === i ? "❯" : " "}
-										</span>
-										<span className={selected === i ? "text-white" : "text-gray-500"}>
-											{style.label}
-										</span>
+									<div key={style.id} className="flex items-center gap-2 cursor-pointer" onClick={() => onComplete(style.id)} onMouseEnter={() => setSelected(i)}>
+										<span className={selected === i ? "text-yellow-400" : "text-gray-600"}>{selected === i ? "❯" : " "}</span>
+										<span className={selected === i ? "text-white" : "text-gray-500"}>{style.label}</span>
 									</div>
 								))}
 							</div>
-							<p className="text-gray-600 mt-4 text-xs">
-								↑ ↓ navigate &nbsp;&nbsp; Enter confirm
-							</p>
+							<p className="text-gray-600 mt-4 text-xs">↑ ↓ navigate &nbsp;&nbsp; Enter confirm</p>
 						</div>
 					</div>
 				)}
