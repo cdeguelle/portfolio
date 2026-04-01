@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-export type PortfolioStyle = "w95" | "pixelart"
+export type PortfolioStyle = "w95" | "pixelart" | "blackhole"
 
 const STEPS = [
 	{ label: "[1/6] Initializing environment...", duration: 200 },
@@ -13,7 +13,8 @@ const STEPS = [
 
 const STYLES: { id: PortfolioStyle; label: string }[] = [
 	{ id: "w95", label: "Windows 95 Desktop" },
-	{ id: "pixelart", label: "Pixel Art World" },
+	// { id: "pixelart", label: "Pixel Art World" },
+	{ id: "blackhole", label: "3D Black Hole" },
 ]
 
 const BAR_WIDTH = 20
