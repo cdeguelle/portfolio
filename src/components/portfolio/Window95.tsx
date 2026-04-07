@@ -300,9 +300,18 @@ export function Window95({
 						style={{
 							margin: 4,
 							...sunken,
-							background: meta.id === "terminal" || meta.id === "map" || meta.id === "phone" ? "#000000" : meta.id === "paint" ? BG : "#ffffff",
+							background:
+								meta.id === "terminal" || meta.id === "map" || meta.id === "phone" ? "#000000" : meta.id === "paint" || meta.id === "minesweeper" ? BG : "#ffffff",
 							padding:
-								meta.id === "cv" || meta.id === "terminal" || meta.id === "map" || meta.id === "phone" || meta.id === "crocus" || meta.id === "discord" ? 0 : 8,
+								meta.id === "cv" ||
+								meta.id === "terminal" ||
+								meta.id === "map" ||
+								meta.id === "phone" ||
+								meta.id === "crocus" ||
+								meta.id === "discord" ||
+								meta.id === "minesweeper"
+									? 0
+									: 8,
 							height: meta.contentHeight ?? undefined,
 							maxHeight: meta.contentHeight ?? 380,
 							overflowY: "auto",

@@ -11,7 +11,7 @@ import msieIcon from "../../assets/msie1-5.png"
 import mineIcon from "../../assets/minesweeper/icon.svg"
 
 export type Position = { x: number; y: number }
-export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint" | "map" | "phone" | "crocus" | "discord"
+export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint" | "map" | "phone" | "crocus" | "discord" | "minesweeper"
 
 export interface WinMeta {
 	id: WinId
@@ -35,8 +35,9 @@ export const WIN_META: WinMeta[] = [
 	{ id: "paint", title: "Paint", icon: paintIcon, width: 720, contentHeight: 520 },
 	{ id: "map", title: "3D Isometric Map", icon: folderIcon, width: 800, contentHeight: 560 },
 	{ id: "phone", title: "Mobile App — Screenshots", icon: computerIcon, width: 700, contentHeight: 620 },
-	{ id: "crocus", title: "Le Petit Crocus — Internet Explorer", icon: computerIcon, width: 1100, contentHeight: 750 },
+	{ id: "crocus", title: "Le Petit Crocus — Internet Explorer", icon: msieIcon, width: 1100, contentHeight: 750 },
 	{ id: "discord", title: "Discord Bot — 3D Logo", icon: computerIcon, width: 540, contentHeight: 480 },
+	{ id: "minesweeper", title: "Démineur", icon: mineIcon, width: 385, contentHeight: 435 },
 ]
 
 export const DESKTOP_ICONS: { id: WinId; label: string; icon: string }[] = [
@@ -64,4 +65,5 @@ export const INITIAL_POS: Record<WinId, Position> = {
 	crocus: { x: 60, y: 30 },
 	discord: { x: 180, y: 60 },
 	phone: { x: 160, y: 50 },
+	minesweeper: { x: 250, y: 80 },
 }

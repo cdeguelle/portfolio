@@ -55,9 +55,7 @@ interface Cell {
 
 // ── Game helpers ──────────────────────────────────────────────────────────────
 function makeGrid(): Cell[][] {
-	return Array.from({ length: ROWS }, () =>
-		Array.from({ length: COLS }, () => ({ mine: false, adj: 0, state: "hidden" as CellState }))
-	)
+	return Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => ({ mine: false, adj: 0, state: "hidden" as CellState })))
 }
 
 function placeMines(grid: Cell[][], safeR: number, safeC: number): Cell[][] {
@@ -77,7 +75,8 @@ function placeMines(grid: Cell[][], safeR: number, safeC: number): Cell[][] {
 			for (let dr = -1; dr <= 1; dr++)
 				for (let dc = -1; dc <= 1; dc++) {
 					if (!dr && !dc) continue
-					const nr = r + dr, nc = c + dc
+					const nr = r + dr,
+						nc = c + dc
 					if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && g[nr][nc].mine) adj++
 				}
 			g[r][c].adj = adj
@@ -155,7 +154,10 @@ function FaceButton({ dead, onClick }: { dead: boolean; onClick: () => void }) {
 	return (
 		<div
 			onMouseDown={() => setPressed(true)}
-			onMouseUp={() => { setPressed(false); onClick() }}
+			onMouseUp={() => {
+				setPressed(false)
+				onClick()
+			}}
 			onMouseLeave={() => setPressed(false)}
 			style={{
 				...(pressed ? sunken : raised),
@@ -190,9 +192,14 @@ export function MinesweeperContent() {
 		if (gameState === "playing") {
 			timerRef.current = setInterval(() => setTime((t) => Math.min(t + 1, 999)), 1000)
 		} else {
-			if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null }
+			if (timerRef.current) {
+				clearInterval(timerRef.current)
+				timerRef.current = null
+			}
 		}
-		return () => { if (timerRef.current) clearInterval(timerRef.current) }
+		return () => {
+			if (timerRef.current) clearInterval(timerRef.current)
+		}
 	}, [gameState])
 
 	const reset = useCallback(() => {
@@ -233,12 +240,13 @@ export function MinesweeperContent() {
 			setGrid(revealed)
 			if (checkWin(revealed)) setGameState("won")
 		},
-		[grid, gameState]
+		[grid, gameState],
 	)
 
 	const handleRightClick = useCallback(
 		(e: React.MouseEvent, r: number, c: number) => {
 			e.preventDefault()
+			e.stopPropagation()
 			if (gameState !== "playing") return
 			const cell = grid[r][c]
 			if (cell.state === "revealed") return
@@ -249,11 +257,10 @@ export function MinesweeperContent() {
 			else newGrid[r][c].state = "hidden"
 			setGrid(newGrid)
 		},
-		[grid, gameState]
+		[grid, gameState],
 	)
 
-	const isInteractable = (cell: Cell) =>
-		cell.state !== "revealed" && gameState !== "won" && gameState !== "lost"
+	const isInteractable = (cell: Cell) => cell.state !== "revealed" && gameState !== "won" && gameState !== "lost"
 
 	return (
 		<div
@@ -309,7 +316,7 @@ export function MinesweeperContent() {
 									userSelect: "none",
 								}}
 							/>
-						))
+						)),
 					)}
 				</div>
 			</div>
