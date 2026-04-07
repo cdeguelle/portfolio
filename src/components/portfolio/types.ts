@@ -11,7 +11,7 @@ import msieIcon from "../../assets/msie1-5.png"
 import mineIcon from "../../assets/minesweeper/icon.svg"
 
 export type Position = { x: number; y: number }
-export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint" | "map" | "phone" | "crocus" | "discord" | "minesweeper"
+export type WinId = "projects" | "about" | "contact" | "computer" | "cv" | "terminal" | "rusure" | "music" | "paint" | "map" | "phone" | "crocus" | "discord"
 
 export interface WinMeta {
 	id: WinId
@@ -31,13 +31,12 @@ export const WIN_META: WinMeta[] = [
 	{ id: "cv", title: "CV_2026", icon: signatureIcon, width: 680, contentHeight: 500, statusText: "1 object" },
 	{ id: "terminal", title: "MS-DOS Prompt", icon: consoleIcon, width: 560 },
 	{ id: "rusure", title: "Shut Down Windows", icon: windowsIcon, width: 360, isDialog: true },
-	{ id: "music", title: "Music", icon: musicIcon, width: 380, contentHeight: 410 },
+	{ id: "music", title: "Music — Now Playing", icon: musicIcon, width: 380, contentHeight: 500 },
 	{ id: "paint", title: "Paint", icon: paintIcon, width: 720, contentHeight: 520 },
 	{ id: "map", title: "3D Isometric Map", icon: folderIcon, width: 800, contentHeight: 560 },
 	{ id: "phone", title: "Mobile App — Screenshots", icon: computerIcon, width: 700, contentHeight: 620 },
-	{ id: "crocus", title: "Le Petit Crocus — Internet Explorer", icon: msieIcon, width: 1100, contentHeight: 750 },
+	{ id: "crocus", title: "Le Petit Crocus — Internet Explorer", icon: computerIcon, width: 1100, contentHeight: 750 },
 	{ id: "discord", title: "Discord Bot — 3D Logo", icon: computerIcon, width: 540, contentHeight: 480 },
-	{ id: "minesweeper", title: "Minesweeper", icon: mineIcon, width: 356, contentHeight: 430 },
 ]
 
 export const DESKTOP_ICONS: { id: WinId; label: string; icon: string }[] = [
@@ -65,5 +64,4 @@ export const INITIAL_POS: Record<WinId, Position> = {
 	crocus: { x: 60, y: 30 },
 	discord: { x: 180, y: 60 },
 	phone: { x: 160, y: 50 },
-	minesweeper: { x: 250, y: 80 },
 }

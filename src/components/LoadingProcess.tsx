@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react"
 
+export type PortfolioStyle = "w95" | "pixelart" | "blackhole" | "editorial"
+
 const STEPS = [
-	{ label: "[1/6] Initializing environment...", duration: 300 },
-	{ label: "[2/6] Loading modules...", duration: 400 },
-	{ label: "[3/6] Compiling shaders...", duration: 500 },
-	{ label: "[4/6] Building layout engine...", duration: 350 },
+	{ label: "[1/6] Initializing environment...", duration: 200 },
+	{ label: "[2/6] Loading modules...", duration: 300 },
+	{ label: "[3/6] Compiling shaders...", duration: 400 },
+	{ label: "[4/6] Building layout engine...", duration: 500 },
 	{ label: "[5/6] Rendering components...", duration: 300 },
-	{ label: "[6/6] Starting server on port 3000...", duration: 250 },
+	{ label: "[6/6] Starting server on port 3000...", duration: 400 },
+]
+
+const STYLES: { id: PortfolioStyle; label: string }[] = [
+	{ id: "w95", label: "Windows 95 Desktop" },
+	// { id: "pixelart", label: "Pixel Art World" },
+	// { id: "blackhole", label: "3D Black Hole" },  ← easter egg, not listed
+	{ id: "editorial", label: "Editorial" },
 ]
 
 const BAR_WIDTH = 20
@@ -30,7 +39,7 @@ function SpinnerDot({ tick }: { tick: number }) {
 }
 
 type Props = {
-	onComplete: () => void
+	onComplete: (style: PortfolioStyle) => void
 }
 
 export default function LoadingProcess({ onComplete }: Props) {
@@ -39,6 +48,7 @@ export default function LoadingProcess({ onComplete }: Props) {
 	const [completedSteps, setCompletedSteps] = useState<string[]>([])
 	const [done, setDone] = useState(false)
 	const [tick, setTick] = useState(0)
+	const [selected, setSelected] = useState(0)
 
 	useEffect(() => {
 		if (done) return
@@ -49,8 +59,7 @@ export default function LoadingProcess({ onComplete }: Props) {
 	useEffect(() => {
 		if (currentStep >= STEPS.length) {
 			setDone(true)
-			const timeout = setTimeout(onComplete, 1000)
-			return () => clearTimeout(timeout)
+			return
 		}
 
 		const step = STEPS[currentStep]
@@ -74,20 +83,31 @@ export default function LoadingProcess({ onComplete }: Props) {
 		}, intervalTime)
 
 		return () => clearInterval(interval)
-	}, [currentStep, onComplete])
+	}, [currentStep])
+
+	useEffect(() => {
+		if (!done) return
+		const handler = (e: KeyboardEvent) => {
+			if (e.key === "ArrowUp") setSelected((s) => (s - 1 + STYLES.length) % STYLES.length)
+			else if (e.key === "ArrowDown") setSelected((s) => (s + 1) % STYLES.length)
+			else if (e.key === "Enter") onComplete(STYLES[selected].id)
+		}
+		window.addEventListener("keydown", handler)
+		return () => window.removeEventListener("keydown", handler)
+	}, [done, selected, onComplete])
 
 	return (
 		<div className="min-h-screen bg-[#141414] text-gray-200 font-mono text-sm p-4">
 			<pre className="text-yellow-400 mb-4">
-				{` ▄████▄  ▓█████▄     ██▓███   ▒█████   ██▀███  ▄▄▄█████▓  █████▒▒█████   ██▓     ██▓ ▒█████  
+				{` ▄████▄  ▓█████▄     ██▓███   ▒█████   ██▀███  ▄▄▄█████▓  █████▒▒█████   ██▓     ██▓ ▒█████
 ▒██▀ ▀█  ▒██▀ ██▌   ▓██░  ██▒▒██▒  ██▒▓██ ▒ ██▒▓  ██▒ ▓▒▓██   ▒▒██▒  ██▒▓██▒    ▓██▒▒██▒  ██▒
 ▒▓█    ▄ ░██   █▌   ▓██░ ██▓▒▒██░  ██▒▓██ ░▄█ ▒▒ ▓██░ ▒░▒████ ░▒██░  ██▒▒██░    ▒██▒▒██░  ██▒
 ▒▓▓▄ ▄██▒░▓█▄   ▌   ▒██▄█▓▒ ▒▒██   ██░▒██▀▀█▄  ░ ▓██▓ ░ ░▓█▒  ░▒██   ██░▒██░    ░██░▒██   ██░
 ▒ ▓███▀ ░░▒████▓    ▒██▒ ░  ░░ ████▓▒░░██▓ ▒██▒  ▒██▒ ░ ░▒█░   ░ ████▓▒░░██████▒░██░░ ████▓▒░
-░ ░▒ ▒  ░ ▒▒▓  ▒    ▒▓▒░ ░  ░░ ▒░▒░▒░ ░ ▒▓ ░▒▓░  ▒ ░░    ▒ ░   ░ ▒░▒░▒░ ░ ▒░▓  ░░▓  ░ ▒░▒░▒░ 
-  ░  ▒    ░ ▒  ▒    ░▒ ░       ░ ▒ ▒░   ░▒ ░ ▒░    ░     ░       ░ ▒ ▒░ ░ ░ ▒  ░ ▒ ░  ░ ▒ ▒░ 
-░         ░ ░  ░    ░░       ░ ░ ░ ▒    ░░   ░   ░       ░ ░   ░ ░ ░ ▒    ░ ░    ▒ ░░ ░ ░ ▒  
-░ ░         ░                    ░ ░     ░                         ░ ░      ░  ░ ░      ░ ░  
+░ ░▒ ▒  ░ ▒▒▓  ▒    ▒▓▒░ ░  ░░ ▒░▒░▒░ ░ ▒▓ ░▒▓░  ▒ ░░    ▒ ░   ░ ▒░▒░▒░ ░ ▒░▓  ░░▓  ░ ▒░▒░▒░
+  ░  ▒    ░ ▒  ▒    ░▒ ░       ░ ▒ ▒░   ░▒ ░ ▒░    ░     ░       ░ ▒ ▒░ ░ ░ ▒  ░ ▒ ░  ░ ▒ ▒░
+░         ░ ░  ░    ░░       ░ ░ ░ ▒    ░░   ░   ░       ░ ░   ░ ░ ░ ▒    ░ ░    ▒ ░░ ░ ░ ▒
+░ ░         ░                    ░ ░     ░                         ░ ░      ░  ░ ░      ░ ░
 ░         ░                                                                                  `}
 			</pre>
 			<p className="text-gray-400 mb-4">Launching cd-portfolio v1.0.0...</p>
@@ -108,8 +128,22 @@ export default function LoadingProcess({ onComplete }: Props) {
 					</div>
 				)}
 				{done && (
-					<div className="mt-4 text-green-400 animate-pulse">
-						<span className="mr-2">✔</span>Ready! Launching...
+					<div className="mt-6 space-y-4">
+						<div className="text-green-400">
+							<span className="mr-2">✔</span>All systems ready.
+						</div>
+						<div>
+							<p className="text-gray-400 mb-3">Select your experience:</p>
+							<div className="space-y-1 ml-2">
+								{STYLES.map((style, i) => (
+									<div key={style.id} className="flex items-center gap-2 cursor-pointer" onClick={() => onComplete(style.id)} onMouseEnter={() => setSelected(i)}>
+										<span className={selected === i ? "text-yellow-400" : "text-gray-600"}>{selected === i ? "❯" : " "}</span>
+										<span className={selected === i ? "text-white" : "text-gray-500"}>{style.label}</span>
+									</div>
+								))}
+							</div>
+							<p className="text-gray-600 mt-4 text-xs">↑ ↓ navigate &nbsp;&nbsp; Enter confirm</p>
+						</div>
 					</div>
 				)}
 			</div>

@@ -87,11 +87,7 @@ function DropdownItem({ item, onClose }: { item: MenuItem; onClose: () => void }
 			}}
 		>
 			<span>{item.label}</span>
-			{item.shortcut && (
-				<span style={{ color: item.disabled ? "#808080" : hovered ? "#c0c0ff" : "#808080", fontSize: 10 }}>
-					{item.shortcut}
-				</span>
-			)}
+			{item.shortcut && <span style={{ color: item.disabled ? "#808080" : hovered ? "#c0c0ff" : "#808080", fontSize: 10 }}>{item.shortcut}</span>}
 		</div>
 	)
 }
@@ -114,18 +110,13 @@ function MenuBar({ onClose, winId }: { onClose: () => void; winId: string }) {
 			const mapped: MenuItem[] = items.map((item) => {
 				if (item === "separator") return item
 				if (item.label === "Close" || item.label === "Exit") return { ...item, action: onClose }
-				if (winId === "paint" && name === "Edit" && item.label === "Undo")
-					return { ...item, disabled: false, shortcut: "Ctrl+Z", action: () => paintBus.undo?.() }
+				if (winId === "paint" && name === "Edit" && item.label === "Undo") return { ...item, disabled: false, shortcut: "Ctrl+Z", action: () => paintBus.undo?.() }
 				return item
 			})
 
 			if (winId === "paint") {
 				if (name === "File") {
-					return [name, [
-						{ label: "Save Image", shortcut: "Ctrl+S", action: () => paintBus.save?.() },
-						"separator" as const,
-						...mapped,
-					]]
+					return [name, [{ label: "Save Image", shortcut: "Ctrl+S", action: () => paintBus.save?.() }, "separator" as const, ...mapped]]
 				}
 				if (name === "Edit") {
 					const undoIdx = mapped.findIndex((i) => i !== "separator" && (i as { label: string }).label === "Undo")
@@ -309,9 +300,11 @@ export function Window95({
 						style={{
 							margin: 4,
 							...sunken,
-							background: meta.id === "terminal" || meta.id === "map" || meta.id === "phone" ? "#000000" : meta.id === "paint" || meta.id === "minesweeper" ? BG : "#ffffff",
-							padding: meta.id === "cv" || meta.id === "terminal" || meta.id === "map" || meta.id === "phone" || meta.id === "crocus" || meta.id === "discord" || meta.id === "minesweeper" ? 0 : 8,
-							height: meta.contentHeight ?? undefined, maxHeight: meta.contentHeight ?? 380,
+							background: meta.id === "terminal" || meta.id === "map" || meta.id === "phone" ? "#000000" : meta.id === "paint" ? BG : "#ffffff",
+							padding:
+								meta.id === "cv" || meta.id === "terminal" || meta.id === "map" || meta.id === "phone" || meta.id === "crocus" || meta.id === "discord" ? 0 : 8,
+							height: meta.contentHeight ?? undefined,
+							maxHeight: meta.contentHeight ?? 380,
 							overflowY: "auto",
 							fontSize: 11,
 							fontFamily: FONT,

@@ -3,7 +3,7 @@ import { BG, FONT, raised, sunken } from "../theme"
 
 export function CrocusContent() {
 	const [blocked, setBlocked] = useState(false)
-	const url = "https://le-petit-crocus-8opa-1ivnfn9b1-cdeguelles-projects.vercel.app/"
+	const url = "https://le-petit-crocus-8opa-lvima3fq8-cdeguelles-projects.vercel.app/"
 
 	return (
 		<div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
@@ -32,7 +32,7 @@ export function CrocusContent() {
 						Le site <strong>lepetitcrocus.fr</strong> refuse d'être intégré via iframe (X-Frame-Options).
 					</div>
 					<a
-						href={"https://le-petit-crocus-8opa-1ivnfn9b1-cdeguelles-projects.vercel.app/"}
+						href={url}
 						target="_blank"
 						rel="noopener noreferrer"
 						style={{ ...raised, background: BG, padding: "3px 14px", fontFamily: FONT, fontSize: 11, cursor: "pointer", textDecoration: "none", color: "#000" }}

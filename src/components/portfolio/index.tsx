@@ -20,6 +20,11 @@ export default function Portfolio() {
 	const [time, setTime] = useState(new Date())
 
 	useEffect(() => {
+		document.documentElement.classList.add("w95-theme")
+		return () => document.documentElement.classList.remove("w95-theme")
+	}, [])
+
+	useEffect(() => {
 		const t = setInterval(() => setTime(new Date()), 1000)
 		return () => clearInterval(t)
 	}, [])

@@ -1,28 +1,40 @@
 # (づ￣ ³￣)づ — clemdegdev.fr
 
-My personal portfolio, built as a **Windows 95-style desktop** experience.
+My personal portfolio, available in two distinct themes selectable at startup.
 
 Live at **[clemdegdev.fr](https://clemdegdev.fr)**
 
-## Concept
+## Themes
 
-The site opens with a retro terminal boot sequence, then drops you into a fully interactive Windows 95 desktop — complete with draggable windows, a start menu, a taskbar, and a right-click context menu. Each "app" reveals a section of the portfolio.
+### Windows 95 Desktop
 
-| Window | Content |
-|--------|---------|
-| About | Bio & tech stack |
-| Projects | Featured work |
-| CV | Résumé (PDF) |
-| Contact | Links & email |
-| Terminal | Easter egg |
-| Music | Currently listening |
+A fully interactive retro desktop environment — draggable windows, start menu, taskbar, right-click context menu. Each "app" reveals a section of the portfolio.
+
+| Window   | Content                       |
+| -------- | ----------------------------- |
+| About    | Bio & tech stack              |
+| Projects | Featured work with live demos |
+| CV       | Résumé                        |
+| Contact  | Links & email                 |
+| Music    | Currently listening           |
+
+### Editorial
+
+A minimal, animation-heavy editorial design. Features:
+
+- Custom orange cursor with lagged ring and white-text reveal effect
+- Hero titles with Matter.js letter-fall physics (drag & throw)
+- Project accordion expanding to full viewport height
+- Embedded 3D isometric map (Three.js + NASA GeoTIFF data)
+- Physics-based skill tag wall in the contact section
 
 ## Tech Stack
 
 - **React 19** + **TypeScript** — UI & logic
-- **Vite** — build tooling
-- **Tailwind CSS** — utility styling
-- **Three.js / WebGL** — used in project demos
+- **Vite 7** — build tooling
+- **Tailwind CSS 4** — utility styling (loading screen)
+- **Three.js 0.183** — 3D rendering (map, Discord logo)
+- **Matter.js 0.20** — 2D physics (letter fall, tag wall)
 - **GitHub Actions** + **FTP Deploy** — CI/CD to Hostinger
 
 ## Local Development
