@@ -1,11 +1,12 @@
-import { useEffect, RefObject, MutableRefObject } from "react"
+import { useEffect } from "react"
+import type { RefObject, MutableRefObject } from "react"
 import Matter from "matter-js"
 
 export function useHeroPhysics(
 	heroRef: RefObject<HTMLElement | null>,
 	canvasRef: RefObject<HTMLCanvasElement | null>,
 	cloneRef: MutableRefObject<HTMLElement | null>,
-	buildCloneRef: MutableRefObject<(() => void) | null>,
+	_buildCloneRef: MutableRefObject<(() => void) | null>,
 	cursorPos: MutableRefObject<{ x: number; y: number }>,
 ) {
 	useEffect(() => {

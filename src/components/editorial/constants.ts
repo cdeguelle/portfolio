@@ -31,7 +31,7 @@ export const PROJECTS = [
 		tags: ["Next.js", "TypeScript"],
 		year: "2025",
 		role: "Fullstack Developer",
-		desc: "E-commerce and showcase website for a French florist. Built with Next.js and a headless CMS. Focus on performance, SEO and a warm editorial aesthetic that matches the brand identity.",
+		desc: "Showcase website for a restaurant owner in Liffré, Bretagne. Built with Next.js and a custom admin panel allowing the client to update the menu independently. Focus on performance, SEO and a warm aesthetic matching the brand identity.",
 		link: "https://www.lepetitcrocus.fr/",
 		imgs: [] as string[],
 	},

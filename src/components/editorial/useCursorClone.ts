@@ -1,4 +1,5 @@
-import { useEffect, RefObject, MutableRefObject } from "react"
+import { useEffect } from "react"
+import type { RefObject, MutableRefObject } from "react"
 
 export function useCursorClone(
 	ringRef: RefObject<HTMLDivElement | null>,

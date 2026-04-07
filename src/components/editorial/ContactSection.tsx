@@ -1,4 +1,4 @@
-import { RefObject } from "react"
+import type { RefObject } from "react"
 
 interface ContactSectionProps {
 	contactTagsRef: RefObject<HTMLDivElement | null>

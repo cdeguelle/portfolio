@@ -1,4 +1,4 @@
-import { MutableRefObject } from "react"
+import type { MutableRefObject } from "react"
 import { MapContent } from "../portfolio/windows/MapContent"
 import { DiscordContent } from "../portfolio/windows/DiscordContent"
 import { PROJECTS, SCROLL_IMGS } from "./constants"
@@ -23,7 +23,7 @@ export function ProjectsSection({ openProj, setOpenProj, buildCloneRef }: Projec
 					return (
 						// Wrapper carries open state — ed-proj className never changes
 						// so React never overwrites the ed-in class added by IntersectionObserver
-						<div key={p.num} className={`ed-proj-wrapper${isOpen ? " ed-proj-open" : ""}`}>
+						<div key={p.num} className={`ed-proj-wrapper ed-proj-${p.num.toLowerCase()}${isOpen ? " ed-proj-open" : ""}`}>
 							{/* ── Row ── */}
 							<div
 								className={`ed-proj ed-fade ed-d${i + 1}`}
@@ -58,16 +58,39 @@ export function ProjectsSection({ openProj, setOpenProj, buildCloneRef }: Projec
 							{/* ── Dropdown panel ── */}
 							<div className={`ed-proj-panel${isOpen ? " ed-proj-open" : ""}`}>
 								<div className="ed-proj-panel-inner">
-									{/* E03: full-height iframe, no sidebar */}
 									{p.num === "E03" ? (
-										<div className="ed-proj-panel-body--iframe">
-											{isOpen && (
-												<iframe
-													src="https://le-petit-crocus-8opa-lvima3fq8-cdeguelles-projects.vercel.app/"
-													title="Le Petit Crocus"
-													allow="fullscreen"
-												/>
-											)}
+										<div className="ed-proj-panel-body">
+											<div className="ed-proj-panel-left">
+												<p className="ed-proj-panel-desc">{p.desc}</p>
+												<div className="ed-proj-panel-meta">
+													<div className="ed-proj-panel-meta-item">
+														<span className="ed-proj-panel-lbl">Year</span>
+														<span className="ed-proj-panel-val">{p.year}</span>
+													</div>
+													<div className="ed-proj-panel-meta-item">
+														<span className="ed-proj-panel-lbl">Role</span>
+														<span className="ed-proj-panel-val">{p.role}</span>
+													</div>
+													<div className="ed-proj-panel-meta-item">
+														<span className="ed-proj-panel-lbl">Stack</span>
+														<span className="ed-proj-panel-val">{p.tags.join(" · ")}</span>
+													</div>
+												</div>
+												{p.link && (
+													<a href={p.link} target="_blank" rel="noreferrer" className="ed-proj-panel-link ed-link">
+														Visit site ↗
+													</a>
+												)}
+											</div>
+											<div className="ed-proj-panel-visual">
+												{isOpen && (
+													<iframe
+														src="https://le-petit-crocus-8opa-lvima3fq8-cdeguelles-projects.vercel.app/"
+														title="Le Petit Crocus"
+														style={{ width: "75%", height: "100%", border: "none", display: "block", marginLeft: "auto" }}
+													/>
+												)}
+											</div>
 										</div>
 									) : (
 										<div className="ed-proj-panel-body">
@@ -77,8 +100,8 @@ export function ProjectsSection({ openProj, setOpenProj, buildCloneRef }: Projec
 												{p.num === "E04" && (
 													<>
 														<p className="ed-discord-desc">
-															Built to manage a growing Discord community. Handles day-to-day moderation autonomously, responds to custom triggers
-															and slash commands, streams audio from YouTube, and assigns roles based on member activity metrics.
+															Built to manage a growing Discord community. Handles day-to-day moderation autonomously, responds to custom triggers and
+															slash commands, streams audio from YouTube, and assigns roles based on member activity metrics.
 														</p>
 														<div className="ed-discord-feature-list">
 															<span className="ed-discord-feature">Moderation — auto-kick, mute, ban with configurable thresholds</span>

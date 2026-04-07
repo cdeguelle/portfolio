@@ -128,7 +128,7 @@ export function TerminalContent() {
 	const [cwdPath, setCwdPath] = useState<string[]>([]) // [] = root C:\
 	const [mode, setMode] = useState<Mode>("normal")
 	const [sudoAttempts, setSudoAttempts] = useState(0)
-	const [pendingSudoCmd, setPendingSudoCmd] = useState("")
+	const [, setPendingSudoCmd] = useState("")
 	const bottomRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
 
