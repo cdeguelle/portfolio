@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const URL = "https://www.lepetitcrocus.fr/"
+const URL = "https://le-petit-crocus-8opa-lvima3fq8-cdeguelles-projects.vercel.app/"
 
 export function BhCrocusContent({ color }: { color: string }) {
 	const [blocked, setBlocked] = useState(false)
@@ -32,7 +32,7 @@ export function BhCrocusContent({ color }: { color: string }) {
 						fontFamily: "monospace",
 					}}
 				>
-					{URL}
+					{"https://www.lepetitcrocus.fr/"}
 				</div>
 				<a
 					href={URL}
@@ -69,12 +69,9 @@ export function BhCrocusContent({ color }: { color: string }) {
 					}}
 				>
 					<span style={{ fontSize: 32 }}>🚫</span>
-					<p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#e0e0f0" }}>
-						Ce site refuse d'être affiché dans un cadre
-					</p>
+					<p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#e0e0f0" }}>Ce site refuse d'être affiché dans un cadre</p>
 					<p style={{ margin: 0, fontSize: 12, color: "#6060a0", maxWidth: 320 }}>
-						<strong style={{ color: "#9090c0" }}>lepetitcrocus.fr</strong> bloque l'intégration via iframe
-						(X-Frame-Options).
+						<strong style={{ color: "#9090c0" }}>lepetitcrocus.fr</strong> bloque l'intégration via iframe (X-Frame-Options).
 					</p>
 					<a
 						href={URL}
@@ -94,12 +91,7 @@ export function BhCrocusContent({ color }: { color: string }) {
 					</a>
 				</div>
 			) : (
-				<iframe
-					src={URL}
-					style={{ flex: 1, border: "none", display: "block", width: "100%" }}
-					title="Le Petit Crocus"
-					onError={() => setBlocked(true)}
-				/>
+				<iframe src={URL} style={{ flex: 1, border: "none", display: "block", width: "100%" }} title="Le Petit Crocus" onError={() => setBlocked(true)} />
 			)}
 		</div>
 	)

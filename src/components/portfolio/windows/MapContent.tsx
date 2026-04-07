@@ -4,7 +4,7 @@ import { MapControls } from "three/addons/controls/MapControls.js"
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js"
 import { FONT } from "../theme"
 
-export function MapContent() {
+export function MapContent({ theme }: { theme?: string }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [loading, setLoading] = useState(true)
@@ -264,45 +264,66 @@ export function MapContent() {
 		<div ref={containerRef} style={{ position: "relative", width: "100%", height: "100%" }}>
 			<canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
 			{loading && (
-				<div
-					style={{
-						position: "absolute",
-						inset: 0,
-						background: "#000000",
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-						justifyContent: "center",
-						gap: 12,
-						fontFamily: FONT,
-					}}
-				>
-					<div style={{ color: "#ffffff", fontSize: 11 }}>Loading map data...</div>
+				theme === "editorial" ? (
 					<div
 						style={{
-							width: 160,
-							height: 16,
-							border: "2px inset #808080",
-							background: "#c0c0c0",
-							padding: 2,
+							position: "absolute",
+							inset: 0,
+							background: "#f0ede6",
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							justifyContent: "center",
+							gap: 20,
 						}}
 					>
+						<div style={{ width: 80, height: 1, background: "#0d0d0d", animation: "edMapLoad 1.1s ease-in-out infinite alternate" }} />
+						<p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 10, letterSpacing: "0.14em", color: "#999", textTransform: "uppercase", margin: 0 }}>
+							Loading map data
+						</p>
+						<style>{`@keyframes edMapLoad { from { width: 40px; opacity: 0.3; } to { width: 140px; opacity: 1; } }`}</style>
+					</div>
+				) : (
+					<div
+						style={{
+							position: "absolute",
+							inset: 0,
+							background: "#000000",
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							justifyContent: "center",
+							gap: 12,
+							fontFamily: FONT,
+						}}
+					>
+						<div style={{ color: "#ffffff", fontSize: 11 }}>Loading map data...</div>
 						<div
 							style={{
-								height: "100%",
-								background: "#000080",
-								animation: "w95-progress 1.2s steps(10, end) infinite",
-								width: "40%",
+								width: 160,
+								height: 16,
+								border: "2px inset #808080",
+								background: "#c0c0c0",
+								padding: 2,
 							}}
-						/>
+						>
+							<div
+								style={{
+									height: "100%",
+									background: "#000080",
+									animation: "w95-progress 1.2s steps(10, end) infinite",
+									width: "40%",
+								}}
+							/>
+						</div>
+						<style>{`
+							@keyframes w95-progress {
+								0%   { margin-left: 0%; }
+								100% { margin-left: 60%; }
+							}
+						`}</style>
 					</div>
-					<style>{`
-						@keyframes w95-progress {
-							0%   { margin-left: 0%; }
-							100% { margin-left: 60%; }
-						}
-					`}</style>
-				</div>
+				)
 			)}
 		</div>
 	)
